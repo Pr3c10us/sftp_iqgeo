@@ -28,6 +28,11 @@ variable "server_name" {
   type        = string
 }
 
+variable "service_name" {
+  description = "Name of the Transfer server"
+  type        = string
+}
+
 variable "server_domain" {
   description = "Domain name for the Transfer server"
   type        = string

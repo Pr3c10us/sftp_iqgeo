@@ -65,6 +65,7 @@ resource "aws_s3_bucket" "iqgeo" {
   }
   
   resource "aws_vpc_endpoint" "iqgeo" {
+    service_name = var.service_name
     vpc_id = aws_vpc.iqgeo.id
   }
   

@@ -13,4 +13,5 @@ module "sftp" {
   role_name             = "sftp_iqgeo_role"
   policy_name           = "sftp_iqgeo_policy"
   public_key_body       = "... SSH key ..."
+  service_name          = "sftp_iqgeo"
 }
