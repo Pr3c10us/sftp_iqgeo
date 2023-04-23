@@ -1,5 +1,5 @@
 resource "aws_vpc" "iqgeo" {
-  cidr_block = vpc_cidr_block
+  cidr_block = var.vpc_cidr_block
 }
 
 resource "aws_subnet" "iqgeo_public" {
@@ -61,7 +61,7 @@ resource "aws_s3_bucket" "iqgeo" {
     name    = "sftp.iqgeo.com"
     type    = "CNAME"
     ttl     = "300"
-    records = [aws_transfer_server.iqgeo.endpoint]
+    records = [aws_transfer_server.sftp_iqgeo_server.endpoint]
   }
   
   resource "aws_vpc_endpoint" "iqgeo" {
@@ -129,7 +129,7 @@ resource "aws_s3_bucket" "iqgeo" {
     policy = data.aws_iam_policy_document.sftp_iqgeo.json
   }
   resource "aws_transfer_ssh_key" "iqgeo" {
-    server_id           = aws_transfer_server.iqgeo.id
+    server_id           = aws_transfer_server.sftp_iqgeo_server.id
     ssh_public_key_body = var.public_key_body
   }
   
