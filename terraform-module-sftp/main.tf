@@ -84,7 +84,8 @@ resource "aws_s3_bucket" "iqgeo" {
     tags = {
       Name = var.server_name
     }
-    domain = var.server_domain
+    # domain = var.server_domain
+    domain = aws_s3_bucket.iqgeo.bucket_domain_name
     # identity_provider_details {
     #   url = "https://iqgeo.com/identity-provider"
     # }
