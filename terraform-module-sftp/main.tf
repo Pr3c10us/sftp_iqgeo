@@ -134,8 +134,9 @@ resource "aws_s3_bucket" "iqgeo" {
     policy = data.aws_iam_policy_document.sftp_iqgeo.json
   }
   resource "aws_transfer_ssh_key" "iqgeo" {
-    server_id           = aws_transfer_server.sftp_iqgeo_server.id
-    ssh_public_key_body = var.public_key_body
+    user_name = aws_transfer_user.sftp_iqgeo.user_name
+    server_id = aws_transfer_server.sftp_iqgeo_server.id
+    body = var.public_key_body
   }
   
   resource "aws_iam_role" "iqgeo" {
