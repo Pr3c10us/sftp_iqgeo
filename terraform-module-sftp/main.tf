@@ -71,20 +71,24 @@ resource "aws_s3_bucket" "iqgeo" {
   
   resource "aws_transfer_server" "sftp_iqgeo_server" {
     identity_provider_type = "SERVICE_MANAGED"
+    url = "https://iqgeo.com/identity-provider"
     endpoint_type = "PUBLIC"
     endpoint_details {
       address_allocation_ids = [aws_subnet.iqgeo_public.id]
       vpc_endpoint_id = aws_vpc_endpoint.iqgeo.id
       vpc_id = aws_vpc.iqgeo.id
+      security_group_ids = [ aws_security_group.iqgeo_sftp.id ]
     }
-    aws_security_group_id = aws_security_group.iqgeo_sftp.id
+    # aws_security_group_id = aws_security_group.iqgeo_sftp.id
+    
     tags = {
       Name = var.server_name
     }
     domain = var.server_domain
-    identity_provider_details {
-      url = "https://iqgeo.com/identity-provider"
-    }
+    # identity_provider_details {
+    #   url = "https://iqgeo.com/identity-provider"
+    # }
+    
   }
   
   resource "aws_transfer_user" "sftp_iqgeo" {
