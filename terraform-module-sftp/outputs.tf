@@ -10,6 +10,10 @@ output "transfer_server_id" {
   value = aws_transfer_server.sftp_iqgeo_server.id
 }
 
-output "transfer_user_name" {
-  value = aws_transfer_user.sftp_iqgeo[count.index].user_name
+# output "transfer_user_name" {
+#   value = aws_transfer_user.sftp_iqgeo[count.index].user_name
+# }
+
+output "transfer_user_names" {
+  value = [for i in range(var.count) : aws_transfer_user.sftp[i].user_name]
 }
