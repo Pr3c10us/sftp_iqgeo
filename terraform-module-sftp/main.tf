@@ -135,7 +135,7 @@ resource "aws_s3_bucket" "iqgeo" {
   }
   resource "aws_transfer_ssh_key" "iqgeo" {
     count = length(var.transfer_user_names)
-    user_name = aws_transfer_user.sftp_iqgeo.user_name
+    user_name = aws_transfer_user.sftp_iqgeo[count.index].user_name
     server_id = aws_transfer_server.sftp_iqgeo_server.id
     body      = element(var.transfer_server_ssh_keys, count.index)
   }

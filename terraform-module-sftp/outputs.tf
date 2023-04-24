@@ -11,5 +11,5 @@ output "transfer_server_id" {
 }
 
 output "transfer_user_name" {
-  value = aws_transfer_user.sftp_iqgeo.user_name
+  value = aws_transfer_user.sftp_iqgeo[count.index].user_name
 }
