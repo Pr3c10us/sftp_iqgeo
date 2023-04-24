@@ -44,6 +44,7 @@ resource "aws_security_group_rule" "iqgeo_sftp_ingress" {
 
 resource "aws_s3_bucket" "iqgeo" {
     bucket = var.bucket_name
+    acl    = "private"
   }
   
   resource "aws_route53_zone" "iqgeo-cloud" {
@@ -70,37 +71,35 @@ resource "aws_s3_bucket" "iqgeo" {
   }
   
   resource "aws_transfer_server" "sftp_iqgeo_server" {
-    identity_provider_type = "SERVICE_MANAGED"
-    url = "https://iqgeo.com/identity-provider"
-    endpoint_type = "PUBLIC"
-    endpoint_details {
-      address_allocation_ids = [aws_subnet.iqgeo_public.id]
-      vpc_endpoint_id = aws_vpc_endpoint.iqgeo.id
-      vpc_id = aws_vpc.iqgeo.id
-      security_group_ids = [ aws_security_group.iqgeo_sftp.id ]
-    }
-    # aws_security_group_id = aws_security_group.iqgeo_sftp.id
-    
-    tags = {
-      Name = var.server_name
-    }
-    # domain = var.server_domain
-    domain = aws_s3_bucket.iqgeo.bucket_domain_name
-    # identity_provider_details {
-    #   url = "https://iqgeo.com/identity-provider"
-    # }
-    
+  identity_provider_type = "SERVICE_MANAGED"
+  url = "https://iqgeo.com/identity-provider"
+  endpoint_type = "PUBLIC"
+  endpoint_details {
+    vpc_endpoint_id = aws_vpc_endpoint.iqgeo.id
+    security_group_ids = [aws_security_group.iqgeo_sftp.id]
   }
+
+  tags = {
+    Name = var.server_name
+  }
+
+  domain = aws_s3_bucket.iqgeo.bucket_domain_name
+}
+
   
   resource "aws_transfer_user" "sftp_iqgeo" {
+    count = length(var.transfer_user_names)
     server_id = aws_transfer_server.sftp_iqgeo_server.id
-    user_name = var.transfer_user_name
+    user_name = element(var.transfer_user_names, count.index)
     role      = aws_iam_role.sftp_iqgeo_role.arn
+    home_directory = "/${var.bucket_name}"
   
     tags = {
       NAME = "sftp_iqgeo"
     }
   }
+  
+  
   
   data "aws_iam_policy_document" "assume_role" {
     statement {
@@ -135,9 +134,10 @@ resource "aws_s3_bucket" "iqgeo" {
     policy = data.aws_iam_policy_document.sftp_iqgeo.json
   }
   resource "aws_transfer_ssh_key" "iqgeo" {
+    count = length(var.transfer_user_names)
     user_name = aws_transfer_user.sftp_iqgeo.user_name
     server_id = aws_transfer_server.sftp_iqgeo_server.id
-    body = var.public_key_body
+    body      = element(var.transfer_server_ssh_keys, count.index)
   }
   
   resource "aws_iam_role" "iqgeo" {

@@ -38,9 +38,9 @@ variable "server_domain" {
   type        = string
 }
 
-variable "transfer_user_name" {
-  description = "Name of the Transfer user"
-  type        = string
+variable "transfer_user_names" {
+  description = "User name(s) for SFTP server"
+  type        = list(string)
 }
 
 variable "role_name" {
@@ -53,7 +53,7 @@ variable "policy_name" {
   type        = string
 }
 
-variable "public_key_body" {
-  description = "SSH public key for the Transfer SSH key"
-  type        = string
+variable "transfer_server_ssh_keys" {
+  description = "SSH Key(s) for transfer server user(s)"
+  type        = list(string)
 }

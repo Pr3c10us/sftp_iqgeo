@@ -8,10 +8,10 @@ module "sftp" {
   bucket_name           = "iqgeo-bucket"
   zone_name             = "sftp.iqgeo.com"
   server_name           = "sftp_iqgeo_server"
-  server_domain         = "sftp.iqgeo.com"
-  transfer_user_name    = "iqgeo_user"
+  server_domain         = "com.amazonaws.var.region.s3"
+  transfer_user_names    = ["iqgeo_user"]
   role_name             = "sftp_iqgeo_role"
   policy_name           = "sftp_iqgeo_policy"
-  public_key_body       = "... SSH key ..."
+  transfer_server_ssh_keys       = ["... SSH key ..."]
   service_name          = "sftp_iqgeo"
 }
